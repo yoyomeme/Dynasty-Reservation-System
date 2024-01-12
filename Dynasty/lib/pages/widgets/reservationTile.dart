@@ -6,13 +6,19 @@ class ReservationTile extends StatelessWidget {
   final Reservation reservation;
   final double cellSize;
 
-  ReservationTile({Key? key, required this.reservation, this.cellSize = 50.0}) : super(key: key);
+  ReservationTile({Key? key, required this.reservation, this.cellSize = 50.0})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    DateTime reservationDateTime = DateFormat('hh:mm a').parse(reservation.timeSlot!);
-    bool isAfternoonReserved = reservationDateTime.hour >= 12 && reservationDateTime.hour < 14;
-    bool isNightReserved = reservationDateTime.hour >= 17 && reservationDateTime.hour < 21;
+    DateTime reservationDateTime =
+        DateFormat('hh:mm a').parse(reservation.timeSlot!);
+    bool isAfternoonReserved =
+        reservationDateTime.hour >= 12 && reservationDateTime.hour < 14 ||
+            (reservationDateTime.hour == 14 && reservationDateTime.minute < 30);
+    bool isNightReserved =
+        reservationDateTime.hour >= 17 && reservationDateTime.hour < 21 ||
+            (reservationDateTime.hour == 21 && reservationDateTime.minute < 30);
 
     return Container(
       width: cellSize,
@@ -27,7 +33,8 @@ class ReservationTile extends StatelessWidget {
             bottom: cellSize / 2, // Half the size of the cell
             child: Container(
               decoration: BoxDecoration(
-                color: isAfternoonReserved ? Colors.orange.shade200 : Colors.white,
+                color:
+                    isAfternoonReserved ? Colors.orange.shade200 : Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(5),
                   topRight: Radius.circular(5),

@@ -1,6 +1,5 @@
 import 'package:app/firebase_options.dart';
 import 'package:app/pages/reservationModal.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './pages/home.dart';
@@ -28,11 +27,6 @@ void main() async {
 
 //void main() => runApp(const MyApp());
 
-
-
-
-
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -41,7 +35,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Reservation System',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 0, 0, 0)),
         useMaterial3: true,
       ),
       initialRoute: '/',

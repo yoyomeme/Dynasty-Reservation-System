@@ -1,63 +1,81 @@
-import 'package:flutter/material.dart';
+import 'dart:math';
 
-class ReservationTableHeader extends StatelessWidget {
+import 'package:app/pages/add.dart';
+import 'package:flutter/material.dart';
+import 'package:app/pages/home.dart';
+
+class ReservationTableHeader extends StatefulWidget {
   final int totalTables;
   final Map<int, bool> afternoonReservations;
   final Map<int, bool> nightReservations;
+  final DateTime selectedDate;
 
   ReservationTableHeader({
     Key? key,
     this.totalTables = 22,
     required this.afternoonReservations,
     required this.nightReservations,
+    required this.selectedDate,
   }) : super(key: key);
+
+  @override
+  _ReservationTableHeaderState createState() => _ReservationTableHeaderState();
+}
+
+class _ReservationTableHeaderState extends State<ReservationTableHeader> {
+  int? selectedTable;
+  bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
     double cellSize = 60; // Size of the square cell
     double cellMargin = 0.66; // Margin around each cell
-    double totalCellsWidth = (cellSize + cellMargin * 2) * totalTables; // Total width of all cells, including margins
-    double screenWidth = MediaQuery.of(context).size.width; // Get the screen width
+    double totalCellsWidth = (cellSize + cellMargin * 2) * widget.totalTables;
 
-    // Check if the total width of cells is less than the screen width
-    bool cellsFillScreen = totalCellsWidth > screenWidth;
-
-    // Calculate the padding to center the cells in the screen
-    double horizontalPadding = cellsFillScreen ? 0 : (screenWidth - totalCellsWidth) / 2;
+    double screenWidth = MediaQuery.of(context).size.width;
+    // Container width is the larger of the total cells width or the screen width
+    double containerWidth = max(totalCellsWidth, screenWidth);
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding), // Apply horizontal padding
       child: Container(
-        height: cellSize, // Height to accommodate two rows
-        width: cellsFillScreen ? null : totalCellsWidth, // Set the width of the container
+        height: cellSize,
+        width: containerWidth, // Updated width
         child: ListView.builder(
-          // Setting physics to null to prevent ListView from scrolling
-          physics: cellsFillScreen ? null : NeverScrollableScrollPhysics(),
+          // Always scrollable physics
+          physics: AlwaysScrollableScrollPhysics(),
           scrollDirection: Axis.horizontal,
-          itemCount: totalTables,
+          itemCount: widget.totalTables,
           itemBuilder: (context, index) {
-            bool isAfternoonReserved = afternoonReservations[index + 1] ?? false;
-            bool isNightReserved = nightReservations[index + 1] ?? false;
+            bool isAfternoonReserved =
+                widget.afternoonReservations[index + 1] ?? false;
+            bool isNightReserved = widget.nightReservations[index + 1] ?? false;
+            //bool isTableSelected = selectedTable == index + 1;
+
             return Container(
+              height: cellSize,
               width: cellSize,
               margin: EdgeInsets.all(cellMargin),
               decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.black, // Set border color
+                  width: 1.0, // Set border width
+                ),
+                borderRadius: BorderRadius.circular(10), // Rounded corners
               ),
               child: Stack(
-                alignment: Alignment.center, // Align text to center
+                alignment: Alignment.center,
                 children: [
                   Positioned(
                     top: 0,
                     left: 0,
                     right: 0,
-                    bottom: cellSize / 2, // Half the size of the cell
+                    bottom: cellSize / 2,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: isAfternoonReserved ? Colors.orange.shade200 : Colors.transparent,
+                        color: isAfternoonReserved
+                            ? Colors.orange.shade200
+                            : Colors.transparent,
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           topRight: Radius.circular(10),
@@ -69,10 +87,12 @@ class ReservationTableHeader extends StatelessWidget {
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    top: cellSize / 2, // Half the size of the cell
+                    top: cellSize / 2,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: isNightReserved ? Colors.blue.shade200 : Colors.transparent,
+                        color: isNightReserved
+                            ? Colors.blue.shade200
+                            : Colors.transparent,
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(10),
                           bottomRight: Radius.circular(10),
@@ -80,11 +100,16 @@ class ReservationTableHeader extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Text(
-                    '${index + 1}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                  FloatingActionButton(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0.0,
+                    onPressed: () => _onButtonPressed(index),
+                    child: Text(
+                      '${index + 1}',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -95,4 +120,42 @@ class ReservationTableHeader extends StatelessWidget {
       ),
     );
   }
+
+  void _onButtonPressed(int index) {
+    setState(() => _isPressed = !_isPressed);
+    _showAddReservationSheet(context, index + 1);
+
+    // Perform action...
+  }
+
+  void _showAddReservationSheet(BuildContext context, int tableNumber) {
+    print('Opening AddPage with selectedDate: ${widget.selectedDate}');
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        ThemeData theme = Theme.of(context);
+
+        return Builder(
+          builder: (BuildContext context) {
+            return Theme(
+              data: theme, // Apply the fetched theme
+              child: Container(
+                margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top + kToolbarHeight),
+                child: AddPage(
+                    selectedDate: widget.selectedDate,
+                    tableNumber: tableNumber),
+              ),
+            );
+          },
+        );
+      },
+    ).then((_) {
+      setState(() {});
+    });
+  }
 }
+//selectedDate: widget.selectedDate, tableNumber: tableNumber);
+      

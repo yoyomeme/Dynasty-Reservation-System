@@ -4,3 +4,8 @@ framework module FirebaseDatabase {
   export *
   module * { export * }
 }
+
+module FirebaseDatabase.Swift {
+  header "FirebaseDatabase-Swift.h"
+  requires objc
+}
