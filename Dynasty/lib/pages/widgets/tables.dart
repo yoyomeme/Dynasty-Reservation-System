@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:app/pages/add.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/home.dart';
@@ -34,7 +33,7 @@ class _ReservationTableHeaderState extends State<ReservationTableHeader> {
 
     double screenWidth = MediaQuery.of(context).size.width;
     // Container width is the larger of the total cells width or the screen width
-    double containerWidth = max(totalCellsWidth, screenWidth);
+    double containerWidth = screenWidth;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,

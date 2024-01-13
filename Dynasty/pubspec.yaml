@@ -48,6 +48,8 @@ dependencies:
   firebase_storage: ^11.4.0
   animated_widgets: ^1.1.0
   avatar_glow: ^3.0.1
+  http: ^1.1.2
+  table_calendar: ^3.0.9
 
   # Add the dependency for the Firebase Core Flutter SDK
   firebase_core: ^2.20.0

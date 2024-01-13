@@ -1,3 +1,6 @@
+import 'dart:convert';
+//import 'package:app/pages/widgets/calendar.dart';
+import 'package:http/http.dart' as http;
 import 'package:app/pages/add.dart';
 import 'package:app/pages/reservation.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +27,7 @@ class _HomeState extends State<Home> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      /*builder: (BuildContext context) {
+      builder: (BuildContext context) {
         ThemeData theme = Theme.of(context);
 
         return Builder(
@@ -40,10 +43,10 @@ class _HomeState extends State<Home> {
             );
           },
         );
-      },*/
-      builder: (BuildContext context) {
-        return AddPage(selectedDate: _currentSelectedDateNotifier.value);
       },
+      /*builder: (BuildContext context) {
+        return AddPage(selectedDate: _currentSelectedDateNotifier.value);
+      },*/
     ).then((_) {
       setState(() {});
     });
@@ -120,6 +123,52 @@ class _HomeState extends State<Home> {
     }
   }
 
+  Future<List<DateTime>> fetchPublicHolidays(
+      int year, String countryCode) async {
+    var apiKey = 'bl77xGdg5Honsc9j4F95sPd8NF11saIQ';
+    var url = Uri.parse(
+        'https://calendarific.com/api/v2/holidays?&api_key=$apiKey&country=$countryCode&year=$year');
+
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      // Parse the data to extract public holidays
+      // This depends on the structure of Calendarific's response
+      List<DateTime> holidays = [];
+      for (var holiday in data['response']['holidays']) {
+        DateTime date = DateTime.parse(holiday['date']['iso']);
+        holidays.add(date);
+      }
+      return holidays;
+    } else {
+      throw Exception('Failed to load holidays');
+    }
+  }
+/*
+  Future<void> _selectDateNum(BuildContext context) async {
+    final DateTime? picked = await showDialog<DateTime>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: CustomCalendar(
+            initialDate: _currentSelectedDateNotifier.value,
+            onDateSelected: (DateTime selectedDate) {
+              print("Date selected from calendar: $selectedDate");
+              Navigator.of(context).pop(selectedDate);
+            },
+          ),
+        );
+      },
+    );
+
+    if (picked != null && picked != _currentSelectedDateNotifier.value) {
+      print("New date picked: $picked");
+      setState(() {
+        _currentSelectedDateNotifier.value = picked;
+      });
+    }
+  }*/
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -140,7 +189,29 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Reservations | ver 1.2.1'),
+        title: RichText(
+          text: const TextSpan(
+            // Default text style
+            children: <TextSpan>[
+              TextSpan(
+                  text: 'Reservations',
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black,
+                    fontSize: 25,
+                  )), // Default AppBar title size
+              // Smaller size for the separator
+              TextSpan(
+                  text: ' (ver 1.2.2)',
+                  style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 14,
+                      color: Colors.black)),
+
+              /// Smaller size for version
+            ],
+          ),
+        ),
         actions: <Widget>[
           InkWell(
             onTap: () {

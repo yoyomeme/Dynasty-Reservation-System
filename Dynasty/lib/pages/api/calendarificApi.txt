@@ -1,0 +1,4 @@
+var apiKey = 'bl77xGdg5Honsc9j4F95sPd8NF11saIQ';
+var countryCode = 'au';
+var url = Uri.parse(
+    'https://calendarific.com/api/v2/holidays?&api_key=$apiKey&country=$countryCode&year=$year');

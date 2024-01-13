@@ -111,6 +111,9 @@ class ReservationList extends StatefulWidget {
 
 class _ReservationListState extends State<ReservationList> {
   DateTime selectedDate = DateTime.now();
+
+  int totalReservations = 0;
+
   final CollectionReference collection =
       FirebaseFirestore.instance.collection('reservations');
 
@@ -129,6 +132,18 @@ class _ReservationListState extends State<ReservationList> {
       'timeStamp_class':
           '${DateFormat('yyyy-MM-dd').format(selectedDate)}T${timeSlot.split(' ')[0]}:00' // example format
     });
+  }
+
+  Future<int> _calculateTotalReservations(DateTime date) async {
+    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection('reservations')
+        .where('timeStamp_class',
+            isGreaterThanOrEqualTo: formattedDate + "T00:00:00")
+        .where('timeStamp_class',
+            isLessThanOrEqualTo: formattedDate + "T23:59:59")
+        .get();
+    return querySnapshot.docs.length;
   }
 
   @override
@@ -152,20 +167,39 @@ class _ReservationListState extends State<ReservationList> {
   }
 
   Future<void> _fetchAndUpdateData(DateTime date) async {
-    // Fetch data for 'selectedDate' asynchronously
     var newSlots = await _getSlotsForSelectedDate(selectedDate);
     if (!mounted) return;
 
     setState(() {
-      currentSlots = newSlots; // Update the state with new data
+      currentSlots = newSlots;
+      totalReservations = newSlots
+          .map((slot) => slot.reservations.length)
+          .fold(0, (a, b) => a + b);
+      print("Total Reservations: $totalReservations"); // Debug print
     });
   }
 
   Future<List<TimeSlot>> _getSlotsForSelectedDate(DateTime date) async {
     // Your logic to fetch slots data for the given date
-    // This should return a List<TimeSlot>
-    // For now, let's use the generateTimeSlots function
-    return generateTimeSlots(); // Replace this with your actual data fetching logic
+
+    // Debugging: Print the formatted date being used in the query
+    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    print("Querying for date: $formattedDate");
+
+    // Perform the Firestore query (assuming this is how you're querying)
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('reservations')
+        .where('timeStamp_class', isEqualTo: formattedDate)
+        .get();
+
+    // Debugging: Print the number of documents fetched
+    print("Documents fetched: ${querySnapshot.docs.length}");
+
+    // Process the query results
+    // ...
+
+    // Return the slots
+    return generateTimeSlots(); // Replace with actual logic
   }
 
   void _showAddReservationSheet(DateTime selectedDate) {
@@ -212,12 +246,13 @@ class _ReservationListState extends State<ReservationList> {
           : selectedDate.subtract(Duration(days: 1));
     });
     widget.onDateChanged(selectedDate); // Notify the parent widget
+    _fetchAndUpdateData(selectedDate);
   }
 
   @override
   Widget build(BuildContext context) {
     List<TimeSlot> slots = generateTimeSlots();
-
+    int totalReservationsForSelectedDate;
     // Get screen width
     double screenWidth = MediaQuery.of(context).size.width * 0.95;
     double widthForFirstTwoColumns =
@@ -241,7 +276,8 @@ class _ReservationListState extends State<ReservationList> {
           // ElevatedButton(
           //   onPressed: _showAddReservationSheet,
           //   child: Text('Add Reservation'),
-          // ),
+          // ),FutureBuilder<int>(
+
           FutureBuilder<Map<String, Map<int, bool>>>(
             future: _getReservedTablesForDate(selectedDate),
             builder: (context, snapshot) {
@@ -270,6 +306,7 @@ class _ReservationListState extends State<ReservationList> {
               );
             },
           ),
+
           GestureDetector(
             onHorizontalDragEnd: (DragEndDetails details) {
               // Check the direction of the drag
@@ -295,9 +332,29 @@ class _ReservationListState extends State<ReservationList> {
                     icon: Icon(Icons.arrow_left),
                     onPressed: () => _changeDate(false),
                   ),
-                  Text(
-                    DateFormat('yyyy-MM-dd').format(selectedDate),
-                    style: TextStyle(fontSize: 20),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FutureBuilder<int>(
+                        future: _calculateTotalReservations(selectedDate),
+                        builder: (context, snapshot) {
+                          int totalReservations = snapshot.data ?? 0;
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                DateFormat('yyyy-MM-dd').format(selectedDate),
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              Text(
+                                "Total Reservations: $totalReservations",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
                   ),
                   IconButton(
                     icon: Icon(Icons.arrow_right),
@@ -323,7 +380,11 @@ class _ReservationListState extends State<ReservationList> {
                 if (!snapshot.hasData || snapshot.data == null) {
                   return Text('No reservations found for this date.');
                 }
-
+                int totalReservationsForSelectedDate =
+                    snapshot.data!.docs.length;
+                totalReservations = totalReservationsForSelectedDate;
+                //});
+                print("Adding reservation to slot: ${totalReservations}");
                 List<TimeSlot> slots = generateTimeSlots();
 
                 for (var doc in snapshot.data!.docs) {
@@ -364,12 +425,18 @@ class _ReservationListState extends State<ReservationList> {
                     slot.reservations.sort((a, b) =>
                         a.reservationTime.compareTo(b.reservationTime));
                   }
+//////////////////////////////////
+                  //int totalReservationsForSelectedDate = snapshot.data!.docs.length;
+
+                  // Update the totalReservations state
+                  //setState(() {
                 }
 
                 return ListView.builder(
                   itemCount: slots.length,
                   itemBuilder: (context, index) {
                     TimeSlot slot = slots[index];
+
                     return ListTile(
                       title: Text(slot.time, style: TextStyle(fontSize: 20.0)),
                       subtitle: Column(
@@ -468,6 +535,12 @@ class _ReservationListState extends State<ReservationList> {
                                           ),
                                           Expanded(
                                             child: BoldLabelWithText(
+                                              label: 'People: ',
+                                              text: '${reservation.people}',
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: BoldLabelWithText(
                                               label: 'Phone No: ',
                                               text:
                                                   '${reservation.phoneNumber}',
@@ -475,7 +548,7 @@ class _ReservationListState extends State<ReservationList> {
                                           ),
                                           Expanded(
                                             child: BoldLabelWithText(
-                                              label: 'Notes: ',
+                                              label: 'Note: ',
                                               text: '${reservation.notes}',
                                             ),
                                           ),
