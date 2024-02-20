@@ -1,5 +1,6 @@
 import 'package:app/pages/widgets/boldLabel.dart';
 import 'package:app/pages/widgets/reservationTile.dart';
+import 'package:app/pages/widgets/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,24 @@ class Reservation {
       this.docId,
       this.timeStamp,
       required this.isSelected});
+}
+
+class TableReservationInfo {
+  bool isReserved;
+  int attended;
+  int numberOfReservations; // Add this
+  bool allAttended; // Add this
+
+  TableReservationInfo(
+      {this.isReserved = false,
+      this.attended = 0,
+      this.numberOfReservations = 0,
+      this.allAttended = true});
+
+  @override
+  String toString() {
+    return 'TableReservationInfo(isReserved: $isReserved, attended: $attended, numberOfReservations: $numberOfReservations, allAttended: $allAttended)';
+  }
 }
 
 class TimeSlot {
@@ -109,6 +128,148 @@ class ReservationList extends StatefulWidget {
   _ReservationListState createState() => _ReservationListState();
 }
 
+List<Widget> _buildReservationDetails2(
+    Reservation reservation, bool isSmallScreen) {
+  double fontSize =
+      isSmallScreen ? 14.0 : 18.0; // Adjust font size based on screen size
+  return [
+    Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BoldLabelWithText(
+            label: '${reservation.timeSlot}',
+            text: ' ',
+            fontSize: fontSize,
+          ),
+        ],
+      ),
+    ),
+    Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BoldLabelWithText(
+            label: '',
+            text: '${reservation.name}',
+            fontSize: fontSize,
+          ),
+        ],
+      ),
+    ),
+    Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BoldLabelWithText(
+            label: '',
+            text: 'People: ${reservation.people}',
+            fontSize: fontSize,
+          ),
+        ],
+      ),
+    ),
+    Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BoldLabelWithText(
+            label: '',
+            text: '${reservation.phoneNumber}',
+            fontSize: fontSize,
+          ),
+        ],
+      ),
+    ),
+    Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BoldLabelWithText(
+            label: '',
+            text: '${reservation.notes}',
+            fontSize: fontSize,
+          ),
+        ],
+      ),
+    ),
+  ];
+  /*return [
+    BoldLabelWithText(
+        label: '${reservation.timeSlot}', text: ' ', fontSize: fontSize),
+    BoldLabelWithText(
+        label: '', text: '${reservation.name}', fontSize: fontSize),
+    BoldLabelWithText(
+        label: 'People: ', text: '${reservation.people}', fontSize: fontSize),
+    BoldLabelWithText(
+        label: '', text: '${reservation.phoneNumber}', fontSize: fontSize),
+    BoldLabelWithText(
+        label: '', text: '${reservation.notes}', fontSize: fontSize),
+  ];*/
+}
+
+List<Widget> _buildReservationDetails(
+    Reservation reservation, bool isSmallScreen) {
+  double fontSize =
+      isSmallScreen ? 14.0 : 18.0; // Adjust font size based on screen size
+  double borderHeight = 30; // Set the height of the border
+
+  List<Widget> detailsWidgets = [
+    '${reservation.timeSlot}',
+    'Name: ${reservation.name}',
+    'Ppl: ${reservation.people}',
+    'Ph: ${reservation.phoneNumber}',
+    'Note: ${reservation.notes}',
+  ].asMap().entries.map((entry) {
+    int index = entry.key;
+    String detail = entry.value;
+
+    Widget detailWidget = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        BoldLabelWithText(
+          label: '',
+          text: detail,
+          fontSize: fontSize,
+        ),
+      ],
+    );
+
+    return Expanded(
+      flex: index == 2 && isSmallScreen
+          ? 0
+          : 1, // Adjust flex for 'Ppl:' on small screen
+      child: Container(
+        width:
+            index == 2 && isSmallScreen ? 55 : null, // Limit width for 'Ppl:'
+        padding: EdgeInsets.symmetric(horizontal: 5),
+
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: BoldLabelWithText(
+                label: '',
+                text: detail,
+                fontSize: fontSize,
+              ),
+            ),
+            // The border is now a vertical Container beside the text
+            if (index != 4) // Add border to all except the last item
+              Container(
+                height: borderHeight,
+                width: 1,
+                color: Colors.black26,
+              ),
+          ],
+        ),
+      ),
+    );
+  }).toList();
+
+  return detailsWidgets;
+}
+
 class _ReservationListState extends State<ReservationList> {
   DateTime selectedDate = DateTime.now();
 
@@ -149,9 +310,11 @@ class _ReservationListState extends State<ReservationList> {
   @override
   void initState() {
     super.initState();
+    fetchAndSetHolidays();
     widget
         .onDateChanged(selectedDate); // Inform parent widget about initial date
     _fetchAndUpdateData(selectedDate);
+    _getReservedTablesForDate(selectedDate);
   }
 
   @override
@@ -163,6 +326,7 @@ class _ReservationListState extends State<ReservationList> {
       });
       // any additional logic if needed
       _fetchAndUpdateData(selectedDate);
+      _getReservedTablesForDate(selectedDate);
     }
   }
 
@@ -171,11 +335,12 @@ class _ReservationListState extends State<ReservationList> {
     if (!mounted) return;
 
     setState(() {
+      _getReservedTablesForDate(selectedDate);
       currentSlots = newSlots;
       totalReservations = newSlots
           .map((slot) => slot.reservations.length)
           .fold(0, (a, b) => a + b);
-      print("Total Reservations: $totalReservations"); // Debug print
+      //print("Total Reservations: $totalReservations"); // Debug print
     });
   }
 
@@ -184,7 +349,7 @@ class _ReservationListState extends State<ReservationList> {
 
     // Debugging: Print the formatted date being used in the query
     String formattedDate = DateFormat('yyyy-MM-dd').format(date);
-    print("Querying for date: $formattedDate");
+    //print("Querying for date: $formattedDate");
 
     // Perform the Firestore query (assuming this is how you're querying)
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -193,7 +358,7 @@ class _ReservationListState extends State<ReservationList> {
         .get();
 
     // Debugging: Print the number of documents fetched
-    print("Documents fetched: ${querySnapshot.docs.length}");
+    //print("Documents fetched: ${querySnapshot.docs.length}");
 
     // Process the query results
     // ...
@@ -227,6 +392,7 @@ class _ReservationListState extends State<ReservationList> {
     });
   }
 
+//widget.onSelectionChanged(checkedReservations.containsValue(true));
   void _onReservationSelected(bool selected, String docId) {
     setState(() {
       checkedReservations[docId] = selected;
@@ -237,6 +403,8 @@ class _ReservationListState extends State<ReservationList> {
       widget
           .onSelectedReservations(selectedReservationIds); // Call the callback
     });
+    widget.onSelectionChanged(checkedReservations.containsValue(true));
+    //print("Updated attended status for docId: $docId");
   }
 
   void _changeDate(bool increment) {
@@ -278,7 +446,7 @@ class _ReservationListState extends State<ReservationList> {
           //   child: Text('Add Reservation'),
           // ),FutureBuilder<int>(
 
-          FutureBuilder<Map<String, Map<int, bool>>>(
+          FutureBuilder<Map<String, Map<int, TableReservationInfo>>>(
             future: _getReservedTablesForDate(selectedDate),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -299,6 +467,8 @@ class _ReservationListState extends State<ReservationList> {
               }
               var afternoonReservations = snapshot.data!['afternoon']!;
               var nightReservations = snapshot.data!['night']!;
+              //print("Afternoon Reservations is : ${afternoonReservations}");
+              //print("nightRes Reservations is : ${nightReservations}");
               return ReservationTableHeader(
                 afternoonReservations: afternoonReservations,
                 nightReservations: nightReservations,
@@ -342,9 +512,14 @@ class _ReservationListState extends State<ReservationList> {
                           return Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                DateFormat('yyyy-MM-dd').format(selectedDate),
-                                style: TextStyle(fontSize: 20),
+                              Row(
+                                children: [
+                                  Text(
+                                    DateFormat('yyyy-MM-dd')
+                                        .format(selectedDate),
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                ],
                               ),
                               Text(
                                 "Total Reservations: $totalReservations",
@@ -380,11 +555,12 @@ class _ReservationListState extends State<ReservationList> {
                 if (!snapshot.hasData || snapshot.data == null) {
                   return Text('No reservations found for this date.');
                 }
+
                 int totalReservationsForSelectedDate =
                     snapshot.data!.docs.length;
                 totalReservations = totalReservationsForSelectedDate;
                 //});
-                print("Adding reservation to slot: ${totalReservations}");
+                //print("Adding reservation to slot: ${totalReservations}");
                 List<TimeSlot> slots = generateTimeSlots();
 
                 for (var doc in snapshot.data!.docs) {
@@ -409,12 +585,11 @@ class _ReservationListState extends State<ReservationList> {
                       slots.indexWhere((s) => s.time == nearestSlotTIme);
 
                   if (slotIndex != -1) {
-                    print(
-                        "Adding reservation to slot: ${slots[slotIndex].time}");
+                    //print( "Adding reservation to slot: ${slots[slotIndex].time}");
                     slots[slotIndex].reservations.add(reservation);
                   } else {
-                    print(
-                        "No matching slot found for reservation time: ${reservation.timeSlot}");
+                    //print(
+                    //  "No matching slot found for reservation time: ${reservation.timeSlot}");
                     var otherSlotIndex =
                         slots.indexWhere((s) => s.time == 'Other');
                     slots[otherSlotIndex].reservations.add(reservation);
@@ -436,6 +611,8 @@ class _ReservationListState extends State<ReservationList> {
                   itemCount: slots.length,
                   itemBuilder: (context, index) {
                     TimeSlot slot = slots[index];
+                    bool isSmallScreen =
+                        MediaQuery.of(context).size.width < 600;
 
                     return ListTile(
                       title: Text(slot.time, style: TextStyle(fontSize: 20.0)),
@@ -453,6 +630,7 @@ class _ReservationListState extends State<ReservationList> {
                                           : 1; // Update attended status
                                   collection.doc(reservation.docId).update(
                                       {'attended_class': reservation.attended});
+                                  _fetchAndUpdateData(selectedDate);
                                   // Update in Firestore as needed
                                 });
                               }
@@ -466,12 +644,15 @@ class _ReservationListState extends State<ReservationList> {
                                   : Colors.red[50],
                               child: Row(
                                 children: [
-                                  ReservationTile(reservation: reservation),
+                                  ReservationTile(
+                                    reservation: reservation,
+                                    cellSize: isSmallScreen ? 40 : 55,
+                                  ),
                                   Expanded(
                                     flex: 3,
                                     child: InkWell(
                                       onTap: () {
-                                        print("people : ${reservation.people}");
+                                        //print("people : ${reservation.people}");
 
                                         showModalBottomSheet(
                                           context: context,
@@ -516,8 +697,13 @@ class _ReservationListState extends State<ReservationList> {
                                       //     setState(() {}); // Refresh the list after editing
                                       //   });
                                       // },
-
                                       child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: _buildReservationDetails(
+                                            reservation, isSmallScreen),
+                                      ),
+                                      /*child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
@@ -541,7 +727,7 @@ class _ReservationListState extends State<ReservationList> {
                                           ),
                                           Expanded(
                                             child: BoldLabelWithText(
-                                              label: 'Phone No: ',
+                                              label: 'Phone: ',
                                               text:
                                                   '${reservation.phoneNumber}',
                                             ),
@@ -553,7 +739,7 @@ class _ReservationListState extends State<ReservationList> {
                                             ),
                                           ),
                                         ],
-                                      ),
+                                      ),*/
                                     ),
                                   ),
                                   Checkbox(
@@ -604,10 +790,47 @@ class _ReservationListState extends State<ReservationList> {
     widget.onDeleteSelected();
   }
 
-  Future<Map<String, Map<int, bool>>> _getReservedTablesForDate(
+  Future<List<Reservation>> fetchReservationsForDate(DateTime date) async {
+    // Format the date for querying Firestore
+    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+
+    // Fetch reservations for the selected date
+    QuerySnapshot query = await FirebaseFirestore.instance
+        .collection('reservations')
+        .where('timeStamp_class',
+            isGreaterThanOrEqualTo: formattedDate + "T00:00:00")
+        .where('timeStamp_class',
+            isLessThanOrEqualTo: formattedDate + "T23:59:59")
+        .get();
+
+    List<Reservation> reservations = [];
+    for (var doc in query.docs) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+      // Parse each document into a Reservation object
+      Reservation reservation = Reservation(
+        tableNumber: data['table_class'],
+        timeSlot: data['time_class'],
+        name: data['name_class'],
+        phoneNumber: data['phNumber_class'],
+        notes: data['notes_class'],
+        people: data['people_class'],
+        attended: data['attended_class'],
+        timeStamp: data['timeStamp_class'],
+        isSelected: false, // Default value
+        docId: doc.id,
+      );
+
+      reservations.add(reservation);
+    }
+
+    return reservations;
+  }
+
+  Future<Map<String, Map<int, TableReservationInfo>>> _getReservedTablesForDate(
       DateTime date) async {
-    Map<int, bool> afternoonReservations = {};
-    Map<int, bool> nightReservations = {};
+    Map<int, TableReservationInfo> afternoonReservations = {};
+    Map<int, TableReservationInfo> nightReservations = {};
 
     // Format the date for querying Firestore
     String formattedDate = DateFormat('yyyy-MM-dd').format(date);
@@ -624,21 +847,28 @@ class _ReservationListState extends State<ReservationList> {
     for (var doc in query.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       int tableNumber = data['table_class'];
-      String timeSlot = data['time_class'];
-      String timeStamp = data['timeStamp_class'];
-      DateTime reservationDateTime =
-          _parseReservationDateTime(timeStamp, timeSlot);
+      int attended = data['attended_class'];
+      DateTime reservationDateTime = _parseReservationDateTime(
+          data['timeStamp_class'], data['time_class']);
+
+      bool isReserved = attended == 0;
+
+      //print("Table: $tableNumber, isReserved: $isReserved, attended: $attended");
+
+      List<Reservation> allReservations = await fetchReservationsForDate(
+          selectedDate); // Fetch all reservations for the selected date
+      updateTableInfo(
+          afternoonReservations, nightReservations, allReservations);
 
       // Categorize reservations into afternoon and night
-      if (reservationDateTime.hour >= 12 && reservationDateTime.hour < 14 ||
-          (reservationDateTime.hour == 14 && reservationDateTime.minute < 30)) {
-        // 12:00 PM to 2:30 PM
-        afternoonReservations[tableNumber] = true;
-      } else if (reservationDateTime.hour >= 17 &&
-              reservationDateTime.hour < 21 ||
-          (reservationDateTime.hour == 21 && reservationDateTime.minute < 30)) {
-        // 5:00 PM to 9:30 PM
-        nightReservations[tableNumber] = true;
+      if (reservationDateTime.hour >= 12 && reservationDateTime.hour < 17) {
+        // 12:00 PM to 4:59 PM (Afternoon)
+        afternoonReservations[tableNumber] =
+            TableReservationInfo(isReserved: isReserved, attended: attended);
+      } else if (reservationDateTime.hour >= 17) {
+        // 5:00 PM onwards (Night)
+        nightReservations[tableNumber] =
+            TableReservationInfo(isReserved: isReserved, attended: attended);
       }
     }
 
@@ -668,5 +898,37 @@ class _ReservationListState extends State<ReservationList> {
     DateTime startTime = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(start);
     DateTime endTime = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(end);
     return slotTime.isAfter(startTime) && slotTime.isBefore(endTime);
+  }
+
+  void updateTableInfo(
+      Map<int, TableReservationInfo> afternoonReservations,
+      Map<int, TableReservationInfo> nightReservations,
+      List<Reservation> allReservations) {
+    // Reset or initialize the reservation counts
+    for (var tableNumber = 1; tableNumber <= 22; tableNumber++) {
+      afternoonReservations[tableNumber] = TableReservationInfo();
+      nightReservations[tableNumber] = TableReservationInfo();
+    }
+
+    // Iterate over each reservation and update the info
+    for (var reservation in allReservations) {
+      var tableNumber = reservation.tableNumber!;
+      var isAfternoon = reservation.reservationTime.hour < 17;
+
+      // Select the correct map based on the reservation time
+      var infoMap = isAfternoon ? afternoonReservations : nightReservations;
+
+      // Get the current info for the table, or create a new one if none exists
+      var info = infoMap[tableNumber] ?? TableReservationInfo();
+
+      // Update the reservation info
+      info.isReserved = info.isReserved || (reservation.attended == 0);
+      info.attended += (reservation.attended ?? 0);
+      info.numberOfReservations++;
+      info.allAttended = info.allAttended && (reservation.attended == 1);
+
+      // Store the updated info back in the map
+      infoMap[tableNumber] = info;
+    }
   }
 }

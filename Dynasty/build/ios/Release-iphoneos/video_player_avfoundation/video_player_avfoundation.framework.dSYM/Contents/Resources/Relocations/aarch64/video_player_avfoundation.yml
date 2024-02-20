@@ -1,6 +1,6 @@
 ---
 triple:          'arm64-apple-darwin'
-binary-path:     '/Users/melon/Documents/GitHub/Dynasty-Reservation-System/Dynasty/build/ios/Release-iphoneos/video_player_avfoundation/video_player_avfoundation.framework/video_player_avfoundation'
+binary-path:     '/Users/melon/Documents/GitHub/Dynasty App /Dynasty-R-S-Good1.2.13/Dynasty/build/ios/Release-iphoneos/video_player_avfoundation/video_player_avfoundation.framework/video_player_avfoundation'
 relocations:
   - { offsetInCU: 0x34, offset: 0x7074C, size: 0x8, addend: 0x0, symName: _video_player_avfoundationVersionString, symObjAddr: 0x0, symBinAddr: 0x10188, symSize: 0x0 }
   - { offsetInCU: 0x69, offset: 0x70781, size: 0x8, addend: 0x0, symName: _video_player_avfoundationVersionNumber, symObjAddr: 0x38, symBinAddr: 0x101C0, symSize: 0x0 }
@@ -140,8 +140,8 @@ relocations:
   - { offsetInCU: 0x2A6A, offset: 0x7378D, size: 0x8, addend: 0x0, symName: '-[FVPVideoPlayerPlugin .cxx_destruct]', symObjAddr: 0x3914, symBinAddr: 0xBDB4, symSize: 0x58 }
   - { offsetInCU: 0x27, offset: 0x73F91, size: 0x8, addend: 0x0, symName: '+[FVPTextureMessage makeWithTextureId:]', symObjAddr: 0x0, symBinAddr: 0xBE0C, symSize: 0x3C }
   - { offsetInCU: 0x35, offset: 0x73F9F, size: 0x8, addend: 0x0, symName: _FVPAVFoundationVideoPlayerApiGetCodec, symObjAddr: 0x1494, symBinAddr: 0xD2A0, symSize: 0x40 }
-  - { offsetInCU: 0x5D, offset: 0x73FC7, size: 0x8, addend: 0x0, symName: _FVPAVFoundationVideoPlayerApiGetCodec.sSharedObject, symObjAddr: 0xE510, symBinAddr: 0x188A0, symSize: 0x0 }
-  - { offsetInCU: 0x74, offset: 0x73FDE, size: 0x8, addend: 0x0, symName: _FVPAVFoundationVideoPlayerApiGetCodec.sPred, symObjAddr: 0xE518, symBinAddr: 0x188A8, symSize: 0x0 }
+  - { offsetInCU: 0x5D, offset: 0x73FC7, size: 0x8, addend: 0x0, symName: _FVPAVFoundationVideoPlayerApiGetCodec.sSharedObject, symObjAddr: 0xE520, symBinAddr: 0x188A0, symSize: 0x0 }
+  - { offsetInCU: 0x74, offset: 0x73FDE, size: 0x8, addend: 0x0, symName: _FVPAVFoundationVideoPlayerApiGetCodec.sPred, symObjAddr: 0xE528, symBinAddr: 0x188A8, symSize: 0x0 }
   - { offsetInCU: 0x316, offset: 0x74280, size: 0x8, addend: 0x0, symName: '+[FVPTextureMessage makeWithTextureId:]', symObjAddr: 0x0, symBinAddr: 0xBE0C, symSize: 0x3C }
   - { offsetInCU: 0x369, offset: 0x742D3, size: 0x8, addend: 0x0, symName: '+[FVPTextureMessage fromList:]', symObjAddr: 0x3C, symBinAddr: 0xBE48, symSize: 0x84 }
   - { offsetInCU: 0x3D8, offset: 0x74342, size: 0x8, addend: 0x0, symName: _GetNullableObjectAtIndex, symObjAddr: 0xC0, symBinAddr: 0xBECC, symSize: 0x70 }

@@ -6,11 +6,16 @@ class ReservationTile extends StatelessWidget {
   final Reservation reservation;
   final double cellSize;
 
-  ReservationTile({Key? key, required this.reservation, this.cellSize = 50.0})
-      : super(key: key);
+  ReservationTile({
+    Key? key,
+    required this.reservation,
+    required this.cellSize,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    bool isSmallScreen = MediaQuery.of(context).size.width < 600;
+
     DateTime reservationDateTime =
         DateFormat('hh:mm a').parse(reservation.timeSlot!);
     bool isAfternoonReserved =

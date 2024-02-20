@@ -150,8 +150,11 @@ class _AddPageState extends State<AddPage> {
                   return null;
                 },
                 onSaved: (value) {
-                  people_class = int.tryParse(peopleController.text);
+                  people_class = int.tryParse(value ?? '0');
                 },
+                /*onChanged: (value) {
+                  people_class = int.tryParse(value);
+                },*/
               ),
               SizedBox(height: 16.0),
               Text(
@@ -245,6 +248,8 @@ class _AddPageState extends State<AddPage> {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
 
+                      people_class = int.tryParse(peopleController.text);
+
                       DateTime reservationDateTime =
                           getFullReservationDateTime();
                       String formattedTime = formatTimeOfDay(_time);
@@ -309,6 +314,8 @@ class _AddPageState extends State<AddPage> {
                     }
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
+
+                      people_class = int.tryParse(peopleController.text);
 
                       DateTime reservationDateTime =
                           getFullReservationDateTime();

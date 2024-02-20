@@ -1,12 +1,12 @@
 import 'dart:math';
 import 'package:app/pages/add.dart';
+import 'package:app/pages/reservation.dart';
 import 'package:flutter/material.dart';
-import 'package:app/pages/home.dart';
 
 class ReservationTableHeader extends StatefulWidget {
   final int totalTables;
-  final Map<int, bool> afternoonReservations;
-  final Map<int, bool> nightReservations;
+  final Map<int, TableReservationInfo> afternoonReservations;
+  final Map<int, TableReservationInfo> nightReservations;
   final DateTime selectedDate;
 
   ReservationTableHeader({
@@ -46,10 +46,23 @@ class _ReservationTableHeaderState extends State<ReservationTableHeader> {
           scrollDirection: Axis.horizontal,
           itemCount: widget.totalTables,
           itemBuilder: (context, index) {
-            bool isAfternoonReserved =
-                widget.afternoonReservations[index + 1] ?? false;
-            bool isNightReserved = widget.nightReservations[index + 1] ?? false;
-            //bool isTableSelected = selectedTable == index + 1;
+            var afternoonInfo = widget.afternoonReservations[index + 1];
+            var nightInfo = widget.nightReservations[index + 1];
+
+            /// Determine colors based on reservation count and attendance
+            Color afternoonColor = (afternoonInfo != null)
+                ? determineColor(afternoonInfo)
+                : Colors.transparent;
+            Color nightColor = (nightInfo != null)
+                ? determineColor(nightInfo)
+                : Colors.transparent;
+
+            bool isAfternoonReserved = afternoonInfo?.isReserved ?? false;
+            int afternoonAttended = afternoonInfo?.attended ?? 0;
+
+            bool isNightReserved = nightInfo?.isReserved ?? false;
+            int nightAttended = nightInfo?.attended ?? 0;
+            //print("Table: ${index + 1}, Afternoon isReserved: $isAfternoonReserved, Night isReserved: $isNightReserved, afternoon attended: $afternoonAttended, night attended: $nightAttended");
 
             return Container(
               height: cellSize,
@@ -118,6 +131,24 @@ class _ReservationTableHeaderState extends State<ReservationTableHeader> {
         ),
       ),
     );
+  }
+
+  Color determineColor(TableReservationInfo info) {
+    try {
+      if (info == null) return Colors.transparent;
+      //print('Determining color for: ${info.toString()}');
+      if (info.numberOfReservations > 1 && !info.allAttended) {
+        //print('Returning darker color');
+        return const Color.fromARGB(255, 255, 60, 0); // Darker color
+      } else if (info.isReserved) {
+        //print('Returning original color');
+        return Colors.orange.shade200; // Original color
+      }
+      return Colors.transparent;
+    } catch (e) {
+      //print('Error in determineColor: $e');
+      return Colors.transparent;
+    }
   }
 
   void _onButtonPressed(int index) {

@@ -1,6 +1,6 @@
 ---
 triple:          'arm64-apple-darwin'
-binary-path:     '/Users/melon/Documents/GitHub/Dynasty-Reservation-System/Dynasty/build/ios/Release-iphoneos/FirebaseFirestore/FirebaseFirestore.framework/FirebaseFirestore'
+binary-path:     '/Users/melon/Documents/GitHub/Dynasty App /Dynasty-R-S-Good1.2.13/Dynasty/build/ios/Release-iphoneos/FirebaseFirestore/FirebaseFirestore.framework/FirebaseFirestore'
 relocations:
   - { offsetInCU: 0x34, offset: 0x5512D, size: 0x8, addend: 0x0, symName: _FirebaseFirestoreVersionString, symObjAddr: 0x0, symBinAddr: 0x14850, symSize: 0x0 }
   - { offsetInCU: 0x69, offset: 0x55162, size: 0x8, addend: 0x0, symName: _FirebaseFirestoreVersionNumber, symObjAddr: 0x30, symBinAddr: 0x14880, symSize: 0x0 }
@@ -71,7 +71,7 @@ relocations:
   - { offsetInCU: 0xC9, offset: 0x55F36, size: 0x8, addend: 0x0, symName: _block_copy_helper, symObjAddr: 0x11C, symBinAddr: 0x4E94, symSize: 0x10 }
   - { offsetInCU: 0xDD, offset: 0x55F4A, size: 0x8, addend: 0x0, symName: _block_destroy_helper, symObjAddr: 0x12C, symBinAddr: 0x4EA4, symSize: 0x8 }
   - { offsetInCU: 0x2B, offset: 0x56103, size: 0x8, addend: 0x0, symName: '_$ss17CodingUserInfoKeyV17FirebaseFirestoreE011documentRefbcD0_WZ', symObjAddr: 0x0, symBinAddr: 0x4EAC, symSize: 0xD0 }
-  - { offsetInCU: 0x4F, offset: 0x56127, size: 0x8, addend: 0x0, symName: '_$ss17CodingUserInfoKeyV17FirebaseFirestoreE011documentRefbcD0ABvpZ', symObjAddr: 0x75E8, symBinAddr: 0x201A0, symSize: 0x0 }
+  - { offsetInCU: 0x4F, offset: 0x56127, size: 0x8, addend: 0x0, symName: '_$ss17CodingUserInfoKeyV17FirebaseFirestoreE011documentRefbcD0ABvpZ', symObjAddr: 0x7638, symBinAddr: 0x201A0, symSize: 0x0 }
   - { offsetInCU: 0x5D, offset: 0x56135, size: 0x8, addend: 0x0, symName: '_$ss17CodingUserInfoKeyV17FirebaseFirestoreE011documentRefbcD0_WZ', symObjAddr: 0x0, symBinAddr: 0x4EAC, symSize: 0xD0 }
   - { offsetInCU: 0x8D, offset: 0x56165, size: 0x8, addend: 0x0, symName: '_$sSS17FirebaseFirestoreE4wrapySSSo20FIRDocumentReferenceCKFZ', symObjAddr: 0xD0, symBinAddr: 0x4F7C, symSize: 0x5C }
   - { offsetInCU: 0xE3, offset: 0x561BB, size: 0x8, addend: 0x0, symName: '_$sSS17FirebaseFirestore19DocumentIDWrappableA2aBP4wrapyxSo20FIRDocumentReferenceCKFZTW', symObjAddr: 0x12C, symBinAddr: 0x4FD8, symSize: 0x64 }

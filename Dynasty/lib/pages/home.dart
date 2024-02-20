@@ -1,5 +1,6 @@
 import 'dart:convert';
-//import 'package:app/pages/widgets/calendar.dart';
+import 'package:app/pages/widgets/calendar.dart';
+import 'package:app/pages/widgets/event.dart';
 import 'package:http/http.dart' as http;
 import 'package:app/pages/add.dart';
 import 'package:app/pages/reservation.dart';
@@ -22,6 +23,7 @@ class _HomeState extends State<Home> {
   DateTime selectedDate = DateTime.now();
 
   List<String> _selectedReservationIds = [];
+  Map<DateTime, List<Event>> _events = {};
 
   void _showAddReservationSheet() {
     showModalBottomSheet(
@@ -52,12 +54,22 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void _updateSelectedDate(DateTime newDate) {
-    _currentSelectedDateNotifier.value = newDate;
+  Future<void> _updateSelectedDate(DateTime newDate) async {
+    // Example asynchronous operation
+    // Just an example delay
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _currentSelectedDateNotifier.value = newDate;
+        selectedDate = newDate;
+      });
+    });
   }
 
   void _onSelectionChanged(bool isSelected) {
-    _showDeleteButton.value = isSelected;
+    setState(() {
+      _showDeleteButton.value = isSelected;
+    });
   }
 
   void _deleteReservations(List<String> selectedReservationIds) {
@@ -144,32 +156,73 @@ class _HomeState extends State<Home> {
       throw Exception('Failed to load holidays');
     }
   }
-/*
-  Future<void> _selectDateNum(BuildContext context) async {
+
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? selectedDateInDialog = _currentSelectedDateNotifier.value;
+
     final DateTime? picked = await showDialog<DateTime>(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          child: CustomCalendar(
-            initialDate: _currentSelectedDateNotifier.value,
-            onDateSelected: (DateTime selectedDate) {
-              print("Date selected from calendar: $selectedDate");
-              Navigator.of(context).pop(selectedDate);
-            },
-          ),
+        ThemeData theme = Theme.of(context);
+
+        return Builder(
+          builder: (BuildContext context) {
+            return Theme(
+              data: theme,
+              child: AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                ),
+                title: Text("Select Date"),
+                contentPadding: EdgeInsets.zero,
+                content: SingleChildScrollView(
+                  // Wrap content in a SingleChildScrollView
+                  child: Container(
+                    width: double.maxFinite,
+                    constraints: BoxConstraints(
+                      // Limit the height
+                      maxHeight: MediaQuery.of(context).size.height *
+                          0.7, // 70% of screen height
+                    ),
+                    child: TableEventsExample(
+                      onDaySelected: (DateTime selectedDay) {
+                        selectedDateInDialog = selectedDay;
+                      },
+                      initialSelectedDate: selectedDate,
+                    ),
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Cancel'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop(selectedDateInDialog);
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );
 
     if (picked != null && picked != _currentSelectedDateNotifier.value) {
-      print("New date picked: $picked");
       setState(() {
-        _currentSelectedDateNotifier.value = picked;
+        selectedDate = picked;
       });
+      _updateSelectedDate(picked);
     }
-  }*/
+  }
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDateNum(BuildContext context) async {
+    //origional calendar
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _currentSelectedDateNotifier.value,
@@ -182,6 +235,21 @@ class _HomeState extends State<Home> {
         selectedDate = picked; // Update the date and trigger a rebuild
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchEvents();
+  }
+
+  void _fetchEvents() {
+    // Populate _events with your data
+    // Example:
+    _events = {
+      DateTime.now(): [Event('Example Event')],
+      DateTime.now().add(Duration(days: 1)): [Event('Another Event')],
+    };
   }
 
   @override
@@ -202,7 +270,7 @@ class _HomeState extends State<Home> {
                   )), // Default AppBar title size
               // Smaller size for the separator
               TextSpan(
-                  text: ' (ver 1.2.2)',
+                  text: ' (ver 1.2.13)',
                   style: TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 14,
@@ -222,15 +290,16 @@ class _HomeState extends State<Home> {
               mainAxisSize: MainAxisSize.min, // Use min to fit the content
               children: <Widget>[
                 Icon(Icons.calendar_today, size: 30), // Calendar icon
-                Padding(
-                  padding:
-                      EdgeInsets.only(left: 8), // Space between icon and text
-                  child: Text('Calendar'), // Your text next to the icon
+                SizedBox(width: 8), // Space between icon and text
+                // Display the selected date and day name
+                Text(
+                  DateFormat('EEEE').format(selectedDate),
+                  style: TextStyle(fontSize: 20),
                 ),
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
               width: 16), // Optional: adds some space to the right of the item
         ],
       ),
@@ -239,6 +308,7 @@ class _HomeState extends State<Home> {
         onDeleteSelected: _deleteReservations,
         onSelectedReservations: _handleSelectedReservations,
         onDateChanged: _updateSelectedDate,
+        //onDateChanged: updateSelectedDate,
 
         //selectedDate: _currentSelectedDateNotifier.value,
         selectedDate: selectedDate,

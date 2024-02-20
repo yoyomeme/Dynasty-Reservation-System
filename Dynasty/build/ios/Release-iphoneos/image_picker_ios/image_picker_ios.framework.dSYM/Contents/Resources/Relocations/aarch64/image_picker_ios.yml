@@ -1,6 +1,6 @@
 ---
 triple:          'arm64-apple-darwin'
-binary-path:     '/Users/melon/Documents/GitHub/Dynasty-Reservation-System/Dynasty/build/ios/Release-iphoneos/image_picker_ios/image_picker_ios.framework/image_picker_ios'
+binary-path:     '/Users/melon/Documents/GitHub/Dynasty App /Dynasty-R-S-Good1.2.13/Dynasty/build/ios/Release-iphoneos/image_picker_ios/image_picker_ios.framework/image_picker_ios'
 relocations:
   - { offsetInCU: 0x34, offset: 0x7202B, size: 0x8, addend: 0x0, symName: _image_picker_iosVersionString, symObjAddr: 0x0, symBinAddr: 0xC8C8, symSize: 0x0 }
   - { offsetInCU: 0x69, offset: 0x72060, size: 0x8, addend: 0x0, symName: _image_picker_iosVersionNumber, symObjAddr: 0x30, symBinAddr: 0xC8F8, symSize: 0x0 }
@@ -139,8 +139,8 @@ relocations:
   - { offsetInCU: 0xA7A, offset: 0x7677C, size: 0x8, addend: 0x0, symName: '-[FLTPHPickerSaveImageToPathOperation .cxx_destruct]', symObjAddr: 0xD48, symBinAddr: 0x8CB4, symSize: 0x7C }
   - { offsetInCU: 0x27, offset: 0x76B0B, size: 0x8, addend: 0x0, symName: '-[FLTSourceCameraBox initWithValue:]', symObjAddr: 0x0, symBinAddr: 0x8D30, symSize: 0x48 }
   - { offsetInCU: 0x35, offset: 0x76B19, size: 0x8, addend: 0x0, symName: _FLTImagePickerApiGetCodec, symObjAddr: 0xCA0, symBinAddr: 0x99D0, symSize: 0x40 }
-  - { offsetInCU: 0x5B, offset: 0x76B3F, size: 0x8, addend: 0x0, symName: _FLTImagePickerApiGetCodec.sSharedObject, symObjAddr: 0xA150, symBinAddr: 0x18298, symSize: 0x0 }
-  - { offsetInCU: 0x71, offset: 0x76B55, size: 0x8, addend: 0x0, symName: _FLTImagePickerApiGetCodec.sPred, symObjAddr: 0xA158, symBinAddr: 0x182A0, symSize: 0x0 }
+  - { offsetInCU: 0x5B, offset: 0x76B3F, size: 0x8, addend: 0x0, symName: _FLTImagePickerApiGetCodec.sSharedObject, symObjAddr: 0xA160, symBinAddr: 0x18298, symSize: 0x0 }
+  - { offsetInCU: 0x71, offset: 0x76B55, size: 0x8, addend: 0x0, symName: _FLTImagePickerApiGetCodec.sPred, symObjAddr: 0xA168, symBinAddr: 0x182A0, symSize: 0x0 }
   - { offsetInCU: 0x2A8, offset: 0x76D8C, size: 0x8, addend: 0x0, symName: '-[FLTSourceCameraBox initWithValue:]', symObjAddr: 0x0, symBinAddr: 0x8D30, symSize: 0x48 }
   - { offsetInCU: 0x2EF, offset: 0x76DD3, size: 0x8, addend: 0x0, symName: '-[FLTSourceCameraBox value]', symObjAddr: 0x48, symBinAddr: 0x8D78, symSize: 0x8 }
   - { offsetInCU: 0x326, offset: 0x76E0A, size: 0x8, addend: 0x0, symName: '-[FLTSourceCameraBox setValue:]', symObjAddr: 0x50, symBinAddr: 0x8D80, symSize: 0x8 }

@@ -171,9 +171,9 @@
     },
     {
       "name": "file_selector_platform_interface",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/file_selector_platform_interface-2.6.1",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/file_selector_platform_interface-2.6.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "file_selector_windows",
@@ -234,6 +234,12 @@
       "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/firebase_storage_web-3.6.17",
       "packageUri": "lib/",
       "languageVersion": "2.18"
+    },
+    {
+      "name": "fixnum",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/fixnum-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
     },
     {
       "name": "fl_chart",
@@ -297,7 +303,7 @@
     },
     {
       "name": "http",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/http-1.1.2",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/http-1.2.0",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -309,19 +315,19 @@
     },
     {
       "name": "image",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/image-4.1.3",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/image-4.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
     {
       "name": "image_picker",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/image_picker-1.0.6",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/image_picker-1.0.7",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
       "name": "image_picker_android",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/image_picker_android-0.8.9+2",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/image_picker_android-0.8.9+3",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -333,7 +339,7 @@
     },
     {
       "name": "image_picker_ios",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/image_picker_ios-0.8.9",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/image_picker_ios-0.8.9+1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -351,7 +357,7 @@
     },
     {
       "name": "image_picker_platform_interface",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/image_picker_platform_interface-2.9.2",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/image_picker_platform_interface-2.9.3",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -363,9 +369,9 @@
     },
     {
       "name": "intl",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/intl-0.19.0",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/intl-0.18.1",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.12"
     },
     {
       "name": "js",
@@ -429,9 +435,9 @@
     },
     {
       "name": "path_provider",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/path_provider-2.1.1",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/path_provider-2.1.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "path_provider_android",
@@ -441,9 +447,9 @@
     },
     {
       "name": "path_provider_foundation",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/path_provider_foundation-2.3.1",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/path_provider_foundation-2.3.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "path_provider_linux",
@@ -453,9 +459,9 @@
     },
     {
       "name": "path_provider_platform_interface",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/path_provider_platform_interface-2.1.1",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/path_provider_platform_interface-2.1.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "path_provider_windows",
@@ -477,7 +483,7 @@
     },
     {
       "name": "permission_handler_android",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/permission_handler_android-12.0.1",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/permission_handler_android-12.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
@@ -525,9 +531,9 @@
     },
     {
       "name": "pointycastle",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/pointycastle-3.7.3",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/pointycastle-3.7.4",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "3.0"
     },
     {
       "name": "provider",
@@ -546,6 +552,12 @@
       "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/share_plus_platform_interface-3.3.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
+    },
+    {
+      "name": "simple_gesture_detector",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/simple_gesture_detector-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "sky_engine",
@@ -584,6 +596,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "table_calendar",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/table_calendar-3.0.9",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "term_glyph",
       "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/term_glyph-1.2.1",
       "packageUri": "lib/",
@@ -609,7 +627,7 @@
     },
     {
       "name": "url_launcher_platform_interface",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/url_launcher_platform_interface-2.3.0",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/url_launcher_platform_interface-2.3.1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -627,9 +645,9 @@
     },
     {
       "name": "uuid",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/uuid-4.2.2",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/uuid-4.3.3",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "3.0"
     },
     {
       "name": "vector_math",
@@ -651,15 +669,15 @@
     },
     {
       "name": "video_player_avfoundation",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/video_player_avfoundation-2.5.5",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/video_player_avfoundation-2.5.6",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
     {
       "name": "video_player_platform_interface",
-      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/video_player_platform_interface-6.2.1",
+      "rootUri": "file:///Users/melon/.pub-cache/hosted/pub.dev/video_player_platform_interface-6.2.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "video_player_web",
@@ -704,7 +722,7 @@
       "languageVersion": "2.19"
     }
   ],
-  "generated": "2024-01-10T02:47:52.200281Z",
+  "generated": "2024-01-21T05:07:57.431558Z",
   "generator": "pub",
   "generatorVersion": "3.2.3"
 }

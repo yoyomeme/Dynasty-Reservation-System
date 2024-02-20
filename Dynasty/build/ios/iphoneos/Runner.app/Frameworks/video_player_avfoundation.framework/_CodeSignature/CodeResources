@@ -6,11 +6,34 @@
 	<dict>
 		<key>Info.plist</key>
 		<data>
-		zSD3xRTK1e4mIAv3rbAleyDzN5M=
+		C3Cs0QmBrmZZSgO6F0nvMqgVSE8=
+		</data>
+		<key>video_player_avfoundation_privacy.bundle/Info.plist</key>
+		<data>
+		icyRPxTYRTpGwLN/WD+LOFBOXxI=
+		</data>
+		<key>video_player_avfoundation_privacy.bundle/PrivacyInfo.xcprivacy</key>
+		<data>
+		/LX0ZlwxwIAIhjZaDB8EiH5KpXA=
 		</data>
 	</dict>
 	<key>files2</key>
-	<dict/>
+	<dict>
+		<key>video_player_avfoundation_privacy.bundle/Info.plist</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			ooCIlhN6AAGzby1BjMgXrdEb6QWsVs0zvbGe07qr25k=
+			</data>
+		</dict>
+		<key>video_player_avfoundation_privacy.bundle/PrivacyInfo.xcprivacy</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			bS2g2NkwIn1CjB2TY7CtbjoS4sm2jFzilxWKdBL8jDE=
+			</data>
+		</dict>
+	</dict>
 	<key>rules</key>
 	<dict>
 		<key>^.*</key>

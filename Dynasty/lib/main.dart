@@ -1,10 +1,11 @@
 import 'package:app/firebase_options.dart';
 import 'package:app/pages/reservationModal.dart';
+import 'package:app/pages/widgets/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './pages/home.dart';
 import './pages/add.dart';
-//import 'pages/widgets/calendar2.dart';
+//import 'pages/widgets/calendar2.txt';
 import './pages/edit.dart';
 import './pages/reservation.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,6 +13,8 @@ import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  //await fetchAndSetHolidays();
   var app = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

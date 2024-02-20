@@ -1,0 +1,1 @@
+ /Users/melon/Documents/GitHub/Dynasty\ App\ /Dynasty-R-S-Good1.2.13/Dynasty/.dart_tool/flutter_build/8be364a4f5c62f173882bfe36c6cdb98/native_assets.yaml: 
